@@ -1,0 +1,1714 @@
+<head>
+  <style> body { margin: 0; } </style>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="//unpkg.com/three"></script>
+  <script src="//unpkg.com/three-spritetext"></script>
+  <script src="//unpkg.com/3d-force-graph"></script>
+  <!--<script src="../../dist/3d-force-graph.js"></script>-->
+</head>
+
+<body>
+  <div id="3d-graph"></div>
+
+  <script>
+    // Random tree
+    const N = 10;
+    fac=150;
+    colors=['gray','blue','red','green','black'];
+
+
+    string=["input:小任同学喜欢在每周五的晚上，和朋友们玩一局王者荣耀。",
+      "1-1:小任周五晚上和朋友打王者",
+    "1-2:小任同学喜欢在每天的晚上五点，和室友们玩一局王者。",
+    "1-3:小任同学喜欢在周五晚上，和朋友们玩一局王者荣耀。",
+    "2-1:小任同学喜欢在每个周五的晚上，和他的室友与朋友们激情的玩几局王者荣耀。",
+    "2-2:小任经常在周五晚上和别人玩王者",
+    "2-3:小任喜欢在周五玩上一天王者荣耀",
+    "output:小任经常在周五晚上和别人玩王者"];
+    simi=[0.721868,0.859055,0.966674,0.83627,0.7072,0.618412,0.707002,0];
+    firstlayerclor='black';
+    secondlyaercolor='blue';
+    thirdlaye='red';
+    node1=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link1=[
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+      ];
+
+
+
+
+
+      string=["input:他昨天在公园里看到了一个穿着红色衣服的女孩。",
+      "1-1:某不知名公园内出现身材火爆红衣女郎！或为当红炸子鸡约会情郎。",
+    "1-2:他昨天在公园里看到了一个穿着红色衣服的女孩。",
+    "1-3:昨天他穿着红色衣服，在女孩的眼里看到了公园。",
+    "2-1:他昨天穿红色衣服假装女孩在公园被人看见了。",
+    "2-2:他昨天在公园里看到了一个穿着红色衣服的女孩。",
+    "2-3:两名身着红衣男女在公园邂逅。",
+    "output:他昨天在公园邂逅了穿着红衣的女孩。"];
+    simi=[0.485092,1,0.84645,0.830576,1,0.431883,0.814639,0];
+    node2=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link2=[
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7], "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+      ];
+
+
+      node1=node1.concat(node2);
+      link1=link1.concat(link2);
+
+
+
+
+
+
+      string=["input:一个很有才华的画家最近会在无锡举办画展。不过听说这次画展只持续三天，要赶紧去看才行。",
+      "1-1:一个很牛逼的画家最近将来无锡，听说好像是最近特火的那个闫华，三天的票秒没！",
+    "1-2:一个很有才华的画家最近会在无锡举办画展。不过听说这次画展只持续三天，要赶紧去看才行。",
+    "1-3:一个很有才华的画展最近会在无锡举办画家，不过听说这次画家只持续三天，要赶紧去看才行。",
+    "2-1:一个有才的书法家最近几天会在无锡举办书画展，要赶紧去看才行。",
+    "2-2:一个很有才华的画家最近会在无锡举办画展。不过听说这次画展只持续三天，要赶紧去看才行。",
+    "2-3:一个有才的画家要参加一个临期的画展。",
+    "output:一个有才的画家最近在无锡举办临期画展，要赶紧去看才行。"];
+    simi=[0.618497,1,0.994169,0.646093,1,0.541953,0.762444,0];
+    node3=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link3=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node3);
+      link1=link1.concat(link3);
+
+      string=["input:他上个月在电影院里看了一部很好看的爱情电影。",
+      "1-1:他这个月在影院看了一部动作片。",
+    "1-2:他上个月在电影院里看了一部很好看的爱情电影。",
+    "1-3:他最近看了部爱情电影。。",
+    "2-1:某影院公开上映火爆爱情动作电影！",
+    "2-2:他上个月在电影院里看了一部很好看的爱情电影。",
+    "2-3:他这个月在影院看了一部爱情电影。",
+    "output:他看了一部电影。"];
+    simi=[0.685809,1,0.713523,0.493956,1,0.843132,0.744756,0];
+    node4=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link4=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node4);
+      link1=link1.concat(link4);
+
+
+      string=["input:他这个周一在超市买了两个五块钱一根的甜玉米。",
+      "1-1:他这个周二在超市买了一个五块钱两根的甜玉米。",
+    "1-2:令人震惊，通货膨胀导致食物价格爆涨，玉米都快买不起了。",
+    "1-3:他这周一去超市买了俩玉米，花了十块。",
+    "2-1:他这个周二在超市买了一个五块钱两根的甜玉米。。",
+    "2-2:他这周一去超市买了俩玉米，花了十块钱。",
+    "2-3:他这周去超市买了两根玉米，花了十块，太贵啦！",
+    "output:他这周一去超市买了俩玉米，花了十块钱。"];
+    simi=[0.790503,0.113262,0.4596780,0.790503,0.861358,0.796889,0.861358,0];
+    node5=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link5=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node5);
+      link1=link1.concat(link5);
+
+
+      string=["input:一个很有个性的摄影师发表了很多的作品。不过听说他的作品风格比较独特，不是所有人都喜欢。",
+      "1-1:一个所有人都喜欢的有个性的摄影师发表了一部风格大众化的作品。",
+    "1-2:一个很有个性的摄影师发表了很多的作品。不过听说他的作品风格比较独特，不是所有人都喜欢。",
+    "1-3:一个与众不同的摄影师并不能拍出令所有人都满意的作品。",
+    "2-1:震惊！某出名摄影师将创作出能让所有人震撼的作品。",
+    "2-2:一个有个性的摄影师发表了很多风格比较独特的作品，不能让所有人都满意。",
+    "2-3:一个很有个性的摄影师发表了一部风格大众化的作品，不是所有人都喜欢。",
+    "output:一个有个性的摄影师发表了一部风格独特的作品，不能让所有人都喜欢。"];
+    simi=[0.605597,1,0.62624,0.314009,0.806184,0.74907,0.805262,0];
+    node6=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link6=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node6);
+      link1=link1.concat(link6);
+
+
+
+
+
+      string=["input:他上个月在电影院里看了一部很好看的爱情电影。",
+      "1-1:他上个月在电影院逃票去看少儿不宜电影。",
+    "1-2:她上上个月在电影院里看了一部很好看的爱情电影和一部很好看的动作电影。",
+    "1-3:她昨天去电影院看电影，本来想看科幻片，最后看了个不好看的爱情电影。",
+    "2-1:他上个月在电影院逃票去看少儿不宜电影。",
+    "2-2:她上个月去电影院，本来想看科幻片，结果看了个不好看的动作电影。",
+    "2-3:她上个月在电影院看了一部爱情电影，据说很好看。",
+    "output:她上个月去电影院看科幻片，最后看了不好看的动作电影。"];
+    simi=[0.62717,0.814962,0.624929,0.62717,0.597858,0.871152,0.50889,0];
+    node7=[
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link7=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node7);
+      link1=link1.concat(link7);
+
+
+
+      string=["input:他昨天在公园里看到了一个穿着红色衣服的女孩。",
+      "1-1:一个穿着红色衣服的女孩昨天在公园没有看到他。",
+    "1-2:他昨天在公园散步时看到有个女孩拿着一件红色毛衣。",
+    "1-3:家人们，谁懂啊，昨天穿着红衣服去公园，结果有个虾头楠一直盯着我。",
+    "2-1:他昨天在公园散步时，看到了一个穿着红色衣服的女孩。",
+    "2-2:一个穿着红色衣服的女孩昨天在公园没有看到他。",
+    "2-3:他昨天在公园散步时看到一个穿红衣服的女孩，太漂亮啦！",
+    "output:他昨天在公园散步时看到一个穿红衣服的女孩。"];
+    simi=[0.889794,0.739176,0.65218,0.925561,0.889794,0.798696,0.855179,0];
+    node8=[
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":colors[2]},
+        {"id": string[6], "group": 1,"color":colors[2]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link8=[
+
+      {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[5],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[6],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[5], "pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac, "color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":thirdlaye},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node8);
+      link1=link1.concat(link8);
+
+
+
+
+
+      string=["input:小陈同学爱好在每周四的上午，和室友们看一部经典电影。",
+      "1-1:小陈同学喜欢在周四早上和室友们看电影。",
+    "1-2:小陈周四晚上和室友看电影。",
+    "1-3:小陈同学偶尔在每周四的下午，和朋友们看一部科幻电影。",
+    "1-4:在周四上午，小陈喜欢和室友一起看电影。",
+    "1-5:小陈同学爱好在每周四的上午八点到十一点半左右和室友们一起看一部爱情科幻电影。。",
+    "1-6:小陈同学喜欢在周四看科幻电影。",
+    "output:小陈同学在周四上午和室友们看科幻电影。"];
+    simi=[0.777813,0.624785,0.663442,0.692345,0.736446,0.603147,0.766622,0.5];
+    node9=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[1]},
+        {"id": string[4], "group": 1,"color":colors[1]},
+        {"id": string[5], "group": 1,"color":colors[1]},
+        {"id": string[6], "group": 1,"color":colors[1]},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link9=[
+
+      {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[3], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[4], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node9);
+      link1=link1.concat(link9);
+
+
+
+      string=["input:小闫同学经常在每周一的中午，和家人们打一局英雄联盟。",
+      "1-1:小闫同学经常在每周一的中午吃完麻辣烫之后，和家人们一边吃榴莲一边打英雄联盟。",
+    "1-2:闫姐经常在每周一的中午，去打玩英雄联盟的家人。",
+    "2-1:闫姐经常在每周一的中午，去打玩英雄联盟的小闫同学。",
+    "2-2:社会闫经常在星期一的中午收完租后，去拷打玩英雄联盟的家人。",
+    "3-1:闫姐经常在每周一的中午收完租后，去打玩英雄联盟的小真同学。",
+    "3-2:闫姐经常在每周一的中午，去打玩王者的小闫同学。",
+    "output:闫姐经常在每周一的中午收完租后，去打玩英雄联盟的小真同学。"];
+    simi=[0.602775,0.724257,0.771841,0.41533,0.587787,0.67134,0.587787,0.5];
+    node10=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[1]},
+        {"id": string[3], "group": 1,"color":colors[2]},
+        {"id": string[4], "group": 1,"color":colors[2]},
+        {"id": string[5], "group": 1,"color":'yellow'},
+        {"id": string[6], "group": 1,"color":'yellow'},
+        {"id": string[7], "group": 1,"color":colors[3]},
+      ];
+      link10=[
+
+      {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac,"color":secondlyaercolor},
+
+        {"source": string[3], "target": string[6],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac,"color":thirdlaye},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac,"color":'yellow'},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac,"color":'yellow'},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":firstlayerclor},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":firstlayerclor},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":firstlayerclor},
+
+      ];
+
+
+      node1=node1.concat(node10);
+      link1=link1.concat(link10);
+
+
+      colors=['gray','blue','red','yellow','white','brown','black','green'];
+      string=["input:小杨同学总是在每周日的黄昏，和亲友们逛一圈江南大学。",
+      "1-1:小杨同学总是在每周日的黄昏，他的爱人们逛一圈江南大学。",
+    "1-2:小杨同学总是在每周日的黄昏，和他的爱人们逛十圈江南大学。",
+    "2-1:小杨同学总是在每天的黄昏，他的爱人们逛十圈江南大学。",
+    "2-2:小杨同学总是在每天的黄昏，和他的爱人们逛十圈江南大学。",
+    "3-1:小杨同学总是在每天的黄昏，和他同学的爱人们逛十圈江南大学。",
+    "3-2:小杨同学总是在每天的黄昏，和他同学的爱人们逛十圈江南大学的图书馆。",
+    "output:小杨同学总是在每天的黄昏，和他爱人们的闺蜜逛十圈江南大学的图书馆。"];
+    simi=[0.873973,0.863355,0.803377,0.783143,0.770456,0.768841,0.748327615,0.5];
+    node11=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link11=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac,"color":'black'},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node11);
+      link1=link1.concat(link11);
+
+      string=["局部input:波塔利斯是一种鲜为人知的鸟，在窗口挂着，夜间鸣唱。",
+      "局部1-1:波塔艾利是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "局部1-2:波塔利斯是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "局部1-3:波塔艾斯是一种鲜为人知的鸟，夜间在树梢上鸣唱。",
+    "局部1-4:波塔利斯是一种鲜为人知的鸟，夜间在树梢上鸣唱。",
+    "局部1-5:波塔丽斯是一种鲜为人知的鸟，夜间在树枝上鸣唱。",
+    "局部1-6:波塔丽斯是一种鲜为人知的鸟，夜间在树梢上鸣唱。",
+    "局部output:波塔丽斯是一种鲜为人知的鸟，夜间在树枝上鸣唱。"];
+    simi=[0.713032,0.806625,0.781174,0.831814,0.806421,0.798047,0.806421,0.5];
+    node12=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link12=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node12);
+      link1=link1.concat(link12);
+
+      string=["局部input:我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我没有坐过火车。",
+      "局部1-1:我在车水马龙的繁华街道旁流浪了四年，可我从来没有坐过汽车，繁华与我无关。",
+    "局部1-2:我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我没有坐过火车。",
+    "局部1-3:我在荒无人烟的村子里生活了四年，可我其实是个隐藏富豪，每天在家中醉生梦死。",
+    "局部1-4:我在荒无人烟的村子里生活了四年，我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我从来没有坐过火车。。",
+    "局部1-5:我在荒无人烟的村子里生活了四年，可我其实之前不住在这里，我每天听着火车响声隆隆响，怀念过去的时光。",
+    "局部1-6:我在荒无人烟的村子里生活了四年，可我其实之前不住在这里，我每天听着火车响声隆隆，怀念过去的时光。",
+    "局部output:我在荒无人烟的村子里生活了四年，可我其实之前不住在这里，我每天听着火车响声隆隆，怀念过去的时光。"];
+    simi=[0.447385,1,0.213391,0.865848,0.47081,0.435149,0.435149,0.5];
+    node13=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link13=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node13);
+      link1=link1.concat(link13);
+
+
+
+      string=["局部input:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+      "局部1-1:他一眼就看到了那个人，在漫天飞雪中，他是那唯一的光。",
+    "局部1-2:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+    "局部1-3:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+    "局部1-4:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。。",
+    "局部1-5:他一眼就看到了那个人，在炉火的火光的照映下，就像一捧误入的风雪。",
+    "局部1-6:他一眼就看到了那个人，在炉火的照映下，就像一捧误入的风雪。",
+    "局部output:他一眼就看到了那个人，在炉火的照映下，就像一捧误入的风雪。"];
+    simi=[0.572506,1,1,1,0.90381,0.941495,0.941495,0.5];
+    node14=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link14=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node14);
+      link1=link1.concat(link14);
+
+      string=["局部input:我们三个人边煮着米饭，边看着那些光脚在冬天里一走一跳的人，嘿嘿笑个不停。",
+      "局部1-1:我们三个人一边煮着米饭，一边看着那些光脚在冬天里一走一跳的人。我们嘿嘿笑个不停。",
+    "局部1-2:我们三个人边煮着米饭，边看着那些光着脚在冬天里一走一跳的人，嘿嘿笑个不停。",
+    "局部1-3:我们三边煮着米饭边看着那些光脚在冬天里一走一跳的人，我们嘿嘿笑个不停。",
+    "局部1-4:我们三个人边煮着米饭，边看着那些光脚在夏天里一走一跳的人，嘿嘿笑个不停。",
+    "局部1-5:我们三个人边煮着米饭，边看着那些光脚在冬天里一走一跳的人，嘿嘿笑个不停。",
+    "局部1-6:我们几个人边煮着饭边看着那些光脚在春天草地上一走一跳的人，嘿嘿笑个不停",
+    "局部output:我们三个人边煮着米饭边看着那些光脚在春天草地上一走一跳的人，嘿嘿笑个不停。"];
+    simi=[0.984412,0.988526,0.983551,0.93049,1,0.798163,0.896686,0.5];
+    node15=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link15=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node15);
+      link1=link1.concat(link15);
+
+      string=["局部input:统计数据显示，教育水平与收入水平之间存在正相关关系，接受高等教育可以带来更好的职业机会。",
+      "局部1-1:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "局部1-2:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "局部1-3:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "局部1-4:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "局部1-5:统计学显示，教育水平与收入水平之间存在正相关关系，接受高等教育的人收入水平高的概率更高。",
+    "局部1-6:统计数据显示，教育水平与收入之间存在关系，接受了高等教育的人收入会更高。",
+    "局部output:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。"];
+    simi=[0.809669,0.809669,0.809669,0.809669,0.808664,0.726624,0.809669,0.5];
+    node16=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link16=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node16);
+      link1=link1.concat(link16);
+
+
+      string=["局部input:李华每天早上起床后会做一杯自制的健康果汁，为身体注入丰富的维生素和营养。",
+      "局部1-1:李华每天早上起床后会做一杯自制的果汁，摄取维生素和营养。",
+    "局部1-2:李华每天早上起床后会做一杯果汁，为身体注入丰富的维生素和营养。",
+    "局部1-3:李华每天早上起床后会做一杯自制的果汁，为身体注入丰富的维生素和营养。",
+    "局部1-4:李华每天早上起床后会做一杯果汁，摄取维生素和营养。",
+    "局部1-5:李华每早起床后做一杯果汁，摄取维生素和营养。",
+    "局部1-6:李华每天早上会做一杯果汁，摄取其中营养。",
+    "局部output:李华每天早上起床后会做一杯果汁，摄取维生素和营养。"];
+    simi=[0.840219,0.932114,0.960998,0.78276,0.728353,0.651674,0.78276,0.5];
+    node17=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link17=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node17);
+      link1=link1.concat(link17);
+
+      string=["局部input:综艺节目《明星挑战》的两位明星选手真真和乐了在节目录制期间发生激烈争执，据现场工作人员透露，两人之间的矛盾早有端倪。",
+      "局部1-1:明星真真和乐乐之间的矛盾早有端倪，据综艺节目《明星挑战》的现场工作人员透露，两位明星在节目录制期间发生激烈争执。",
+    "局部1-2:明星真真和乐乐早有矛盾。这一点在综艺节目《明星挑战》录制期间两人的激烈争执便可见端倪。",
+    "局部1-3:《明星挑战》两位明星真真和乐乐发生剧烈冲突，甚至发生肢体碰撞，场面激烈。",
+    "局部1-4:综艺节目《明星挑战》的两位明星真真和乐乐在录制节目期间发生激烈争执。",
+    "局部1-5:综艺节目《明星大挑战》中，真真和乐乐发生争执，险大打出手。",
+    "局部1-6:明星真真和乐乐之间早有过节，这次在《明星大挑战》中，两人发生了剧烈冲突。",
+    "局部output:明星真真和乐乐在综艺节目《明星挑战》中发生剧烈冲突，据透露两人之间的矛盾早有端倪。"];
+    simi=[0.95782,0.825438,0.601999,0.822126,0.632672,0.729439,0.799239,0.5];
+    node18=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link18=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node18);
+      link1=link1.concat(link18);
+
+
+      string=["局部input:一位著名企业家宣布将投资千万美元，以推动数据可视化技术的发展和应用。",
+      "局部1-1:一位著名的企业家宣布将投资千万美元，但依然不指望能将数据可视化的发展和应用推向高潮。",
+    "局部1-2:一位著名企业家宣布将投资千万美元，将数据可视化的发展和应用推向高潮。",
+    "局部1-3:一位著名企业家宣布将投资4亿美元，但依然不指望能将数据可视化的发展和应用推向高潮。",
+    "局部1-4:一位著名企业家宣布将投资千万美元，以推动数据可视化技术及其应用。",
+    "局部1-5:多位著名企业家宣布将投资千万美元，以推动数据可视化应用与发展。",
+    "局部1-6:一位著名企业家宣布将投资4万美元，将推动数据可视化技术的发展和应用。",
+    "局部output:一位著名企业家宣布将投资4万美元以推动数据可视化的应用与发展。"];
+    simi=[0.747623,0.880073,0.667944,0.963188,0.920123,0.899672,0.858735,0.5];
+    node19=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link19=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node19);
+      link1=link1.concat(link19);
+
+      string=["局部input:在科学上没有平坦的大道，只有不畏劳苦沿着山路攀登的人，才有希望到达光辉的顶点。",
+      "局部1-1:在科学上只有曲折的达到，那些沿着陡峭山路攀登的人，不一定有希望到达光辉的顶点，但那些乘坐缆车的人一定可以。",
+    "局部1-2:在科学上，虽然没有平坦的大道，但那些不畏劳苦沿着山路攀登的人有更大的希望达到光辉的顶点。",
+    "局部1-3:在科学上没有平坦的大道，不畏劳苦的人一定不可以，那些乘坐缆车的人也不可以！",
+    "局部1-4:在科学上没有平坦的大道，那些乘坐缆车的人不可以，不畏劳苦沿着陡峭山路攀登的人或许有希望到达光辉的顶点。",
+    "局部1-5:在科学上没有平坦的大道，怕苦的人一定不行，坐缆车的也不行。",
+    "局部1-6:科学上只有曲折的大道，不怕辛苦沿着陡峭山路攀登的人不一定可以到达光辉的顶点，但坐缆车的人也不一定可以。",
+    "局部output:科学的道路一定不是平坦的，努力攀登的人可能也到不了终点，但坐缆车的一定可以。"];
+    simi=[0.724308,0.900786,0.569678,0.831411,0.433823,0.72981,0.519245,0.5];
+    node20=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link20=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac,"color":'black'},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac,"color":'black'},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac,"color":'black'},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac,"color":'black'},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac,"color":'black'},
+
+      ];
+
+
+      node1=node1.concat(node20);
+      link1=link1.concat(link20);
+
+
+      string=["全局input:波塔利斯是一种鲜为人知的鸟，在窗口挂着，夜间鸣唱。",
+      "全局1-1:波塔艾利是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "全局1-2:波塔利斯是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "全局1-3:波塔艾利是一种鲜为人知的鸟，夜间在悬崖的树梢上鸣唱。",
+    "全局1-4:波塔艾利是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "全局1-5:波塔艾利是一种鲜为人知的鸟，夜间在悬崖的树枝上鸣唱。",
+    "全局1-6:波塔利斯是一种鲜为人知的鸟，夜间在悬崖中鸣唱。",
+    "全局output:波塔利斯是一种鲜为人知的鸟，夜间在悬崖中鸣唱。"];
+    simi=[0.713032,0.806625,0.671767,0.713032,0.644998,0.806625,0.806625,0.5];
+    node21=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link21=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node21);
+      link1=link1.concat(link21);
+
+
+
+      string=["全局input:我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我没有坐过火车。",
+      "全局1-1:我在车水马龙的繁华街道旁流浪了四年，可我从来没有坐过汽车，繁华与我无关。",
+    "全局1-2:我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我没有坐过火车。",
+    "全局1-3:我在车水马龙的繁华街道旁流浪了四年，可我从来没有坐过汽车，繁华与我无关。",
+    "全局1-4:我在车水马龙的繁华街道旁生活了四年，可我从来没有坐过汽车，繁华与我无关。",
+    "全局1-5:我在火车响声隆隆中成长了四年，可我从来没坐过火车，更没见过车水马龙的繁华街道。",
+    "全局1-6:我在车水马龙的繁华街道旁生活了四年，可我从来没有坐过汽车，繁华与我无关。",
+    "全局output:我在火车响声隆隆驶来驶去的铁轨旁边成长了四年，可是我从来没有坐过火车。"];
+    simi=[0.447385,1,0.447385,0.433918,0.727893,0.433918,0.977159,0.5];
+    node22=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link22=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node22);
+      link1=link1.concat(link22);
+
+
+      string=["全局input:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+      "全局1-1:他一眼就看到了那个人，在漫天飞雪中，他是那唯一的光。",
+    "全局1-2:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+    "全局1-3:他一眼就看到了那个人，在漫天飞雪中，他是那唯一的光。",
+    "全局1-4:他一眼就看到了那个人，在橙黄炉火的照映，就像一捧误入的风雪。",
+    "全局1-5:他一眼就看到了那个人，在火光的映射下，他像风雪一般误入。",
+    "全局1-6:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。",
+    "全局output:他一眼就看到了那个人，在橙黄炉火的照映下，就像一捧误入的风雪。"];
+    simi=[0.572506,1,0.572506,0.98682,0.752553,1,1,0.5];
+    node23=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link23=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node23);
+      link1=link1.concat(link23);
+
+
+
+      string=["全局input:我们三个人边煮着米饭，边看着那些光脚在冬天里一走一跳的人，嘿嘿笑个不停。",
+      "全局1-1:我们三个人一边煮着米饭，一边看着那些光脚在冬天里一走一跳的人。我们嘿嘿笑个不停。",
+    "全局1-2:我们三个人边煮着米饭，边看着那些光着脚在冬天里一走一跳的人，嘿嘿笑个不停。",
+    "全局1-3:我们三边煮米饭边看那些光脚在冬天一走一跳的人，我们嘿嘿笑个不停。",
+    "全局1-4:我们三个人边煮着米饭，边看着那些光脚在夏天里一走一跳的人，嘿嘿笑个不停。",
+    "全局1-5:我们三个人边煮米饭，边看那些光脚人在冬天里一走一跳，嘿嘿笑个不停。",
+    "全局1-6:我们三人边煮饭边看着那人在光着脚一走一跳，嘿嘿笑个不停。",
+    "全局output:我们三人边煮着米饭，边看着那些光着脚在冬天里一走一跳的人，嘿嘿笑个不停。"];
+    simi=[0.984412,0.988525,0.922334,0.93049,0.93528,0.890876,0.978616,0.5];
+    node24=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link24=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node24);
+      link1=link1.concat(link24);
+
+
+
+      string=["全局input:统计数据显示，教育水平与收入水平之间存在正相关关系，接受高等教育可以带来更好的职业机会。。",
+      "全局1-1:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "全局1-2:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "全局1-3:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "全局1-4:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。",
+    "全局1-5:统计数据显示，教育水平与收入水平存在正相关关系，接受高等教育的人收入水平更高的概率更高。",
+    "全局1-6:统计数据显示，教育水平与收入水平之间存在相关关系，接受高等教育的人会获得更好的收入。",
+    "全局output:统计数据显示，教育水平与收入水平之间存在正相关关系，接受了高等教育的人收入水平高的概率更高。"];
+    simi=[0.809669,0.809669,0.809669,0.809669,0.817737,0.829723,0.809669,0.5];
+    node25=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link25=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node25);
+      link1=link1.concat(link25);
+
+
+
+      string=["全局input:李华每天早上起床后会做一杯自制的健康果汁，为身体注入丰富的维生素和营养。",
+      "全局1-1:李华每天早上起床后会做一杯果汁，摄取维生素和营养。",
+    "全局1-2:李华每天早上起床后会做一杯果汁，为身体注入丰富的维生素和营养。",
+    "全局1-3:李华每天早上起床后会做一杯健康果汁，摄取维生素和营养。",
+    "全局1-4:李华每天早上起床后会做一杯果汁，摄取维生素和营养。",
+    "全局1-5:李华每早起床后会做一杯果汁，摄取维生素和营养。",
+    "全局1-6:李华每天会做一杯果汁，摄取所需营养和维生素。",
+    "全局output:李华每天早上起床后会做一杯果汁，摄取维生素和营养。"];
+    simi=[0.78276,0.932114,0.845122,0.78276,0.715062,0.67714,0.78276,0.5];
+    node26=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link26=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node26);
+      link1=link1.concat(link26);
+
+
+      string=["全局input:一位著名企业家宣布将投资千万美元，以推动数据可视化技术的发展和应用。",
+      "全局1-1:一位著名的企业家宣布将投资千万美元，但依然不指望能将数据可视化的发展和应用推向高潮。",
+    "全局1-2:一位著名企业家宣布将投资千万美元，将数据可视化的发展和应用推向高潮。",
+    "全局1-3:一位著名企业家将投资十亿美元，以推动数据可视化技术的发展和应用。",
+    "全局1-4:一位著名企业家宣布将投资4千万美元，或可指望能够将数据可视化的发展的和应用推向高潮。",
+    "全局1-5:多位企业家宣布将投资一亿美元，或可推动数据可视化发展。",
+    "全局1-6:一位著名企业家宣布将投资44万美元，或可推动数据可视化的发展和应用。",
+    "全局output:多位著名企业家宣布将投资44万美元，或可推动数据可视化的发展和应用。"];
+    simi=[0.747623,0.880073,0.890783,0.795922,0.74804,0.853372,0.829438,0.5];
+    node27=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link27=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node27);
+      link1=link1.concat(link27);
+
+
+
+      string=["全局input:综艺节目《明星挑战》的两位明星选手真真和乐了在节目录制期间发生激烈争执，据现场工作人员透露，两人之间的矛盾早有端倪。",
+      "全局1-1:明星真真和乐乐之间的矛盾早有端倪，据综艺节目《明星挑战》的现场工作人员透露，两位明星在节目录制期间发生激烈争执。",
+    "全局1-2:明星真真和乐乐早有矛盾。这一点在综艺节目《明星挑战》录制期间两人的激烈争执便可见端倪。",
+    "全局1-3:综艺节目《明星挑战》录制期间，明星真真和乐乐发生激烈争执，他们的矛盾已经大到此等地步了吗?",
+    "全局1-4:明星真真和乐乐早期已有的矛盾，在综艺节目《明星挑战》大爆发。",
+    "全局1-5:明星真真和乐乐于综艺节目《明星大挑战》中发生激烈争执。",
+    "全局1-6:明星真真和乐乐在综艺节目《明星大挑战》中发生积攒已久的剧烈矛盾。",
+    "全局output:明星真真和乐乐在综艺节目《明星大挑战》中，爆发冲突。"];
+    simi=[0.95782,0.825438
+,0.694696
+,0.657932
+,0.733647
+,0.643743
+,0.642777
+,0.5];
+    node28=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link28=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node28);
+      link1=link1.concat(link28);
+
+      string=["全局input:在科学上没有平坦的大道，只有不畏劳苦沿着山路攀登的人，才有希望到达光辉的顶点",
+      "全局1-1:在科学上只有曲折的达到，那些沿着陡峭山路攀登的人，不一定有希望到达光辉的顶点，但那些乘坐缆车的人一定可以。",
+    "全局1-2:在科学上，虽然没有平坦的大道，但那些不畏劳苦沿着山路攀登的人有更大的希望达到光辉的顶点。",
+    "全局1-3:在科学上没有平坦的大道，不畏劳苦的人一定不可以，那些乘坐缆车的人也不可以！",
+    "全局1-4:在科学上没有不曲折的大道，那些乘坐缆车的人也行可以，但不畏劳苦的人一定不可以。",
+    "全局1-5:科学的大道是不平坦的，怕苦的人一定不行，坐缆车的没准可以。",
+    "全局1-6:科学上的道路没有平坦无阻的，怕辛苦的人不行，但坐缆车的人可能不行。",
+    "全局output:科学的道路并不是一帆风顺的，怕苦的人不行，坐缆车的也不行。"];
+    simi=[0.724308
+,0.900786
+,0.569678
+,0.528272
+,0.393999
+,0.495793
+,0.327963
+,0.5];
+    node29=[
+        {"id": string[0], "group": 1,"color":colors[0]},
+        {"id": string[1], "group": 1,"color":colors[1]},
+        {"id": string[2], "group": 1,"color":colors[2]},
+        {"id": string[3], "group": 1,"color":colors[3]},
+        {"id": string[4], "group": 1,"color":colors[4]},
+        {"id": string[5], "group": 1,"color":colors[5]},
+        {"id": string[6], "group": 1,"color":colors[6]},
+        {"id": string[7], "group": 1,"color":colors[7]},
+      ];
+      link29=[
+
+      {"source": string[1], "target": string[2],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+        {"source": string[2], "target": string[3],"pp": (1-simi[7])*fac},
+        {"source": string[2], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[3], "target": string[4],"pp": (1-simi[7])*fac},
+        {"source": string[3], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[4], "target": string[5],"pp": (1-simi[7])*fac},
+        {"source": string[4], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[1], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[5], "target": string[6],"pp": (1-simi[7])*fac},
+        {"source": string[5], "target": string[7],"pp": (1-simi[7])*fac},
+
+
+
+        {"source": string[6], "target": string[7],"pp": (1-simi[7])*fac},
+
+        {"source": string[0], "target": string[1],  "pp": (1-simi[0])*fac},
+        {"source": string[0], "target": string[2],  "pp": (1-simi[1])*fac},
+        {"source": string[0], "target": string[3],  "pp": (1-simi[2])*fac},
+        {"source":string[0], "target": string[4],  "pp":(1-simi[3])*fac},
+        {"source": string[0], "target": string[5], "pp": (1-simi[4])*fac},
+        {"source": string[0], "target": string[6],  "pp": (1-simi[5])*fac},
+        {"source": string[0], "target": string[7],  "pp": (1-simi[6])*fac},
+
+      ];
+
+
+      node1=node1.concat(node29);
+      link1=link1.concat(link29);
+
+      node30=[
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        {"id": 'star', "group": 1},
+        
+
+      ];
+      node1=node1.concat(node30);
+
+
+
+
+    const gData = {
+        "nodes":node1,
+  "links": link1
+    };
+
+    const Graph = ForceGraph3D()
+      (document.getElementById('3d-graph')).nodeLabel('id')
+      .graphData(gData).nodeRelSize(10).linkWidth(3).linkDirectionalParticles(2)
+      .linkDirectionalParticleWidth(2.5)
+      .linkDirectionalParticleSpeed(0.006).onNodeClick(node => {
+          // Aim at node from outside it
+          const distance = 40;
+          const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
+
+          const newPos = node.x || node.y || node.z
+            ? { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }
+            : { x: 0, y: 0, z: distance }; // special case if node is in (0,0,0)
+
+          Graph.cameraPosition(
+            newPos, // new position
+            node, // lookAt ({ x, y, z })
+            3000  // ms transition duration
+          );
+        })
+      .d3Force('link').distance(link=>link.pp);
+        //Graph.nodeColor(node =>node.color);
+    
+  </script>
+</body>
